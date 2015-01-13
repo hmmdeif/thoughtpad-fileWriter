@@ -41,7 +41,7 @@ Alternatively if you are in a *NIX environment `npm test` will run the tests plu
 
 The code is available under the [MIT license](http://deif.mit-license.org/).
 
-[travis-image]: https://img.shields.io/travis/hmmdeif/thoughtpad-fileWriter/master.svg?style=flat-square
-[travis-url]: https://travis-ci.org/hmmdeif/thoughtpad-fileWriter
-[coveralls-image]: https://img.shields.io/coveralls/hmmdeif/thoughtpad-fileWriter/master.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/r/hmmdeif/thoughtpad-fileWriter?branch=master
+[travis-image]: https://img.shields.io/travis/thoughtpad/thoughtpad-fileWriter/master.svg?style=flat-square
+[travis-url]: https://travis-ci.org/thoughtpad/thoughtpad-fileWriter
+[coveralls-image]: https://img.shields.io/coveralls/thoughtpad/thoughtpad-fileWriter/master.svg?style=flat-square
+[coveralls-url]: https://coveralls.io/r/thoughtpad/thoughtpad-fileWriter?branch=master
