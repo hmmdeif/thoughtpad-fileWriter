@@ -15,7 +15,7 @@ describe("file writer", function () {
             data.should.equal('test');
             yield fs.unlink('./test/out/file1');
             done();
-        })();
+        }).catch(done);
     });
 
     it("should copy directory with correct structure", function (done) {
@@ -29,7 +29,7 @@ describe("file writer", function () {
             data.should.equal('foo');
             yield app.remakeDirectory('./test/out/end/');
             done();
-        })();
+        }).catch(done);
     });
 
     it("should clean a directory tree and remake the top level", function (done) {
@@ -42,6 +42,6 @@ describe("file writer", function () {
             files = yield fs.readdir('./test/out/end/')
             files.length.should.equal(0);
             done();
-        })();
+        }).catch(done);
     });
 });
