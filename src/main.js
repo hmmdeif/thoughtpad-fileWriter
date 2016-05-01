@@ -19,17 +19,42 @@ var removeDirectory = function *(folder) {
         } else { // delete file
             yield fs.unlink(curPath);
         }
+    } 
+
+    yield rmdir(folder);
+},
+
+// The following two functions are a nightmare. On windows, it doesn't yield correctly when unlinking files,
+// so there may be the case when it tries to remove a non-empty folder. There is so way around this apart from
+// trying again a few ms later. In testing this happens irregularly and only when the live reload plugin is watching
+// the folder (delay in the unlink event bubbling up).
+rmdir = function *(folder) {
+    try {    
+        yield fs.rmdir(folder);
+    } catch (e) {
+        yield function (cb) {
+            setTimeout(cb, 500);
+        };
+        yield rmdir(folder);
     }
-    yield fs.rmdir(folder);
-    return;
+},
+
+mkdir = function *(folder) {
+    try {    
+        yield fs.mkdir(folder);
+    } catch (e) {
+        yield function (cb) {
+            setTimeout(cb, 500);
+        };
+        yield mkdir(folder);
+    }
 },
 
 remakeDirectory = function *(folder) {
-    if (yield fs.exists(folder)) {
-        yield removeDirectory(folder);
-    }
 
-    yield fs.mkdir(folder);
+    yield removeDirectory(folder); 
+
+    yield mkdir(folder);
 },
 
 writeFile = function *(file, data, splitPart) {
