@@ -2,26 +2,28 @@ var fs = require('co-fs'),
     fsp = require('co-fs-plus');
 
 var removeDirectory = function *(folder) {
-    var files = yield fs.readdir(folder),
-        i = 0,
-        len = files.length,
-        curPath,
-        stat;
+    try {
+        var files = yield fs.readdir(folder),
+            i = 0,
+            len = files.length,
+            curPath,
+            stat;
 
-    for (i; i < len; i++) {
-        curPath = folder + "/" + files[i];
-        isDirectory = false;
+        for (i; i < len; i++) {
+            curPath = folder + "/" + files[i];
+            isDirectory = false;
 
-        stat = yield fs.lstat(curPath);
+            stat = yield fs.lstat(curPath);
 
-        if (stat.isDirectory()) { // recurse
-            yield removeDirectory(curPath);
-        } else { // delete file
-            yield fs.unlink(curPath);
+            if (stat.isDirectory()) { // recurse
+                yield removeDirectory(curPath);
+            } else { // delete file
+                yield fs.unlink(curPath);
+            }
         }
-    } 
 
-    yield rmdir(folder);
+        yield rmdir(folder);
+    } catch (ex) {}
 },
 
 // The following two functions are a nightmare. On windows, it doesn't yield correctly when unlinking files,
@@ -29,7 +31,7 @@ var removeDirectory = function *(folder) {
 // trying again a few ms later. In testing this happens irregularly and only when the live reload plugin is watching
 // the folder (delay in the unlink event bubbling up).
 rmdir = function *(folder) {
-    try {    
+    try {
         yield fs.rmdir(folder);
     } catch (e) {
         yield function (cb) {
@@ -40,7 +42,7 @@ rmdir = function *(folder) {
 },
 
 mkdir = function *(folder) {
-    try {    
+    try {
         yield fs.mkdir(folder);
     } catch (e) {
         yield function (cb) {
@@ -52,7 +54,7 @@ mkdir = function *(folder) {
 
 remakeDirectory = function *(folder) {
 
-    yield removeDirectory(folder); 
+    yield removeDirectory(folder);
 
     yield mkdir(folder);
 },
